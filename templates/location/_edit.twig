@@ -1,0 +1,163 @@
+{% extends "_layouts/cp" %}
+{% import '_includes/forms' as forms %}
+
+{% set fullPageForm = true %}
+
+{% set title = "Locations - Edit Location"|t %}
+
+{% set crumbs = [
+    { label: 'Locations'|t, url: url('locations') },
+    { label: location.name |t, url: url('locations/location/' ~ location.id) }
+] %}
+
+{% set content %}
+
+    {% if craft.app.version < 2.5 %}
+        <form id="site-form" method="post" accept-charset="UTF-8" data-saveshortcut="1" data-saveshortcut-redirect="{{ continueEditingUrl }}">
+    {% endif %}
+
+        {{ getCsrfInput() }}
+        <input type="hidden" name="action" value="locations/location/editLocation" />
+        <input type="hidden" name="id" value="{{location.id}}">
+        <input type="hidden" name="redirect" value="locations">
+
+        {{ forms.selectField({
+            first:        true,
+            label:        "Priority"|t,
+            required:     true,
+            id:           'priority',
+            name: 'priority',
+            instructions: "Choose a priority for the display order."|t,
+            autofocus:    true,
+            options: {
+                0: 'Normal',
+                1: 'Featured',
+                2: 'Always Shown'
+            },
+            value: location.priority
+        }) }}
+
+        {{ forms.textField({
+            label:        "Name"|t,
+            required:     true,
+            id:           'name',
+            name: 'name',
+            instructions: ""|t,
+            value: location.name
+        }) }}
+
+        {{ forms.textField({
+            label:        "Address 1"|t,
+            required:     true,
+            id:           'address1',
+            name: 'address1',
+            instructions: ""|t,
+            value: location.address1
+        }) }}
+
+        {{ forms.textField({
+            label:        "Address 2"|t,
+            required:     false,
+            id:           'address2',
+            name: 'address2',
+            instructions: ""|t,
+            value: location.address2
+        }) }}
+
+        {{ forms.textField({
+            label:        "City"|t,
+            required:     true,
+            id:           'city',
+            name: 'city',
+            instructions: ""|t,
+            value: location.city
+        }) }}
+
+        {{ forms.textField({
+            label:        "State"|t,
+            required:     true,
+            id:           'state',
+            name: 'state',
+            instructions: ""|t,
+            value: location.state
+        }) }}
+
+        {{ forms.textField({
+            label:        "Zip Code"|t,
+            required:     true,
+            id:           'zipCode',
+            name: 'zipCode',
+            instructions: ""|t,
+            value: location.zipCode
+        }) }}
+
+        {{ forms.textField({
+            label:        "County"|t,
+            required:     true,
+            id:           'country',
+            name: 'country',
+            instructions: ""|t,
+            value: location.country
+        }) }}
+
+        {{ forms.textField({
+            label:        "Phone"|t,
+            required:     false,
+            id:           'phone',
+            name: 'phone',
+            instructions: ""|t,
+            value: location.phone
+        }) }}
+
+        {{ forms.textField({
+            label:        "Website"|t,
+            required:     false,
+            id:           'website',
+            name: 'website',
+            instructions: ""|t,
+            value: location.website
+        }) }}
+
+        {{ forms.textField({
+            label:        "Demo Dealer"|t,
+            required:     false,
+            id:           'demoDealer',
+            name: 'demoDealer',
+            instructions: ""|t,
+            value: location.demoDealer
+        }) }}
+
+        {{ forms.textField({
+            label:        "Rental Bikes and Tours"|t,
+            required:     false,
+            id:           'rentalBikesAndTours',
+            name: 'rentalBikesAndTours',
+            instructions: ""|t,
+            value: location.rentalBikesAndTours
+        }) }}
+
+        {{ forms.textField({
+            label:        "Products"|t,
+            required:     false,
+            id:           'products',
+            name: 'products',
+            instructions: "Comma separated list."|t,
+            value: location.products
+        }) }}
+
+        <!-- Needed for for Craft < 2.5 -->
+        {% if craft.app.version < 2.5 %}
+            <div class="item" data-position="left" data-colspan="1">
+                <div class="buttons">
+                    <div class="btngroup submit first">
+                        <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    {% if craft.app.version < 2.5 %}
+        </form>
+    {% endif %}
+
+{% endset %}

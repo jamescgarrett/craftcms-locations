@@ -1,0 +1,5 @@
+{% header "Content-Type: application/json" %}
+{ 
+    "locations": {{ locations | json_encode | raw }},
+    "settings": {{ settings | json_encode | raw }}
+}
