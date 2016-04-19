@@ -20,11 +20,24 @@ class LocationsService extends BaseApplicationComponent
             $protocol = 'http://';
         }
 
-        $googleMapsKey =  craft()->locations_settings->getGoogleMapsApiKey();
+        $settings =  craft()->locations_settings->getSettings();
 
-        craft()->templates->includeJsFile($protocol . 'maps.googleapis.com/maps/api/js?' . ($googleMapsKey ? 'key='.$googleMapsKey : ''));
+        craft()->templates->includeJsFile($protocol . 'maps.googleapis.com/maps/api/js?' . ($settings['googleMapsApiKey'] ? 'key='.$settings['googleMapsApiKey'] : ''));
 
-        craft()->templates->includeJsFile(UrlHelper::getResourceUrl('locations/src/js/app.js'));
+        craft()->templates->includeJsFile(UrlHelper::getResourceUrl('locations/src/js/locations.js'));
+
+        if (!$settings['useYourOwnJavascriptFile'])
+        {
+            $this->addLocationsJavascript($settings);
+        }
+
+    }
+
+    public function addLocationsJavascript($settings)
+    {
+        craft()->templates->includeJs('document.addEventListener("DOMContentLoaded",function(){const locations = new LocationLocator({
+            data: "' . $settings['dataApiPath'] . '"
+        });});');
     }
 
     public function isSecureSite()
@@ -38,9 +51,9 @@ class LocationsService extends BaseApplicationComponent
 
         foreach (craft()->config->get('defaultTemplateExtensions') as $extension) 
         {
-            if ( IOHelper::fileExists( craft()->path->getTemplatesPath() . 'locationsPlugin/_locations' . "." . $extension) ) 
+            if ( IOHelper::fileExists( craft()->path->getTemplatesPath() . 'plugin_locations/_locations' . "." . $extension) ) 
             {
-                $html = craft()->templates->render('locationsPlugin/_locations');
+                $html = craft()->templates->render('plugin_locations/_locations');
             }
             else
             {

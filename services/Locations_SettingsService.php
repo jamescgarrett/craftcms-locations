@@ -45,22 +45,6 @@ class Locations_SettingsService extends BaseApplicationComponent
         }
     }
 
-    public function getGoogleMapsApiKey()
-    {
-        $model = $this->getSettingsModel();
-
-        if (!$model)
-        {
-            return false;
-        } 
-        else 
-        {
-            $result = $model->attributes;
-
-            return $result['googleMapsApiKey'];
-        }
-    }
-
     public function saveSettings(Locations_SettingsModel $model)
     {
 

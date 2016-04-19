@@ -23,6 +23,8 @@ class Locations_SettingsController extends BaseController
         $model->defaultZip = craft()->request->getPost('defaultZip');
         $model->defaultRadius = craft()->request->getPost('defaultRadius');
         $model->useGeoLocation = craft()->request->getPost('useGeoLocation');
+        $model->useYourOwnJavascriptFile = craft()->request->getPost('useYourOwnJavascriptFile');
+        $model->dataApiPath = craft()->request->getPost('dataApiPath');
 
         if (craft()->locations_settings->saveSettings($model)) 
         {

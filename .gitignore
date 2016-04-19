@@ -1,11 +1,3 @@
 *.log
 
 *sublime*
-
-resources/node_modules
-resources/app
-resources/gulp_tasks
-resources/.babelrc
-resources/.eslintrc
-resources/gulpfile.babel.js
-resources/package.json

@@ -79,6 +79,32 @@
             }) }}
         </div>
 
+        <div class="field">
+            <div class="heading">
+                <label for="useYourOwnJavascriptFile">{{'Use Your Own Javascript File' |t}}</label>
+                <div class="instructions">
+                    <p>{{'Use your own javascript file to add the locations functionality.'|t}}</p>
+                </div>
+            </div>
+            {{ forms.lightSwitch({
+                label:        "Use Your Own Javascript File"|t,
+                required:     false,
+                id:           'useYourOwnJavascriptFile',
+                name: 'useYourOwnJavascriptFile',
+                on: (settings.useYourOwnJavascriptFile is defined) ? settings.useYourOwnJavascriptFile : ""
+            }) }}
+        </div>
+
+        {{ forms.textField({
+            label:        "API Path"|t,
+            required:     true,
+            id:           'dataApiPath',
+            name: 'dataApiPath',
+            instructions: "The path to your data source. Chances are you don't need to change this..."|t,
+            autofocus:    true,
+            value: settings.dataApiPath
+        }) }}
+
         <!-- Needed for for Craft < 2.5 -->
         {% if craft.app.version < 2.5 %}
             <div class="item" data-position="left" data-colspan="1">
