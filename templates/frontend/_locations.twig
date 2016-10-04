@@ -1,27 +1,35 @@
 <div class="locations">
-    <div class='grid grid--contained'>
-        <div class='grid-row'>
-            <div class='grid-col--xxs12 grid-col--xs5'>
-                <div class="locations-searchForm-errors"></div>
-                <form class="locations-searchForm">
-                    <input
-                        type='text'
-                        class='locations-searchForm-search'
-                        name='search' 
-                        placeholder='Enter Zip Code'
-                    />
-                    <input
-                        type='text'
-                        class='locations-searchForm-radius'
-                        name='radius' 
-                        placeholder='Search Radius in Miles ex: 50'
-                    />
-                    <input class="locations-search-button button" type='submit' value='Search' />
-                </form>
-            </div>
-        </div>
-        <div class='locations-results grid-row'>
-            <div class="locations-loading"></div>
-        </div>
-    </div>
+    <form class="locations-form">
+        <input type="text" class="locations-form-search" name="search" placeholder="Enter Zip Code" />
+        <input type="text" class="locations-form-radius" name="radius" placeholder="Search Radius in Miles ex: 50" />
+        <input class="button" type="submit" value="Search" />
+    </form>
+    <div class="locations-errors"></div>
+    <div class="locations-loading"></div>
+    <div class="locations-map" style="width:100%;height:500px;"></div>
+    <div class="locations-empty"></div>
+    <div class="locations-results"></div>
 </div>
+{% verbatim %}
+    <script type="x-tmpl-mustache" id="location-template">
+        {{#locations}}
+            <div class="location">
+                <p>
+                    <strong>{{name}}</strong>
+                    <br>
+                    <a href="http://maps.google.com/?q={{address1}}+{{city}}+{{state}}+{{zipCode}}" target="_blank">
+                        {{address1}}
+                        {{#address2}}
+                            <br>{{address1}}
+                        {{/address2}}
+                        <br>{{city}}, {{state}} {{zipCode}}
+                    </a>
+                    <br>
+                    {{phone}}
+                    <br>
+                    <a href="{{websiteLink}}" target="_blank">{{website}}</a>
+                </p>
+            </div>
+        {{/locations}}
+    </script>
+{% endverbatim %}

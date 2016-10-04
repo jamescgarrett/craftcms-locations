@@ -11,6 +11,7 @@ class Locations_SettingsModel extends BaseModel
             'notFoundText'      => AttributeType::String,
             'defaultZip' 		=> AttributeType::String,
             'defaultRadius' 	=> AttributeType::String,
+            'showMap'           => AttributeType::Bool,
             'useGeoLocation'	=> AttributeType::Bool,
             'useYourOwnJavascriptFile'   => AttributeType::Bool,
             'dataApiPath'   => AttributeType::String

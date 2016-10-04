@@ -19,6 +19,7 @@ class Locations_SettingsRecord extends BaseRecord
             'notFoundText'      => AttributeType::String,
             'defaultZip'        => AttributeType::String,
             'defaultRadius'     => AttributeType::String,
+            'showMap'           => AttributeType::Bool,
             'useGeoLocation'    => AttributeType::Bool,
             'useYourOwnJavascriptFile'   => AttributeType::Bool,
             'dataApiPath'   => array(AttributeType::String, 'default' => $siteUrl . 'api/craft/locationsplugin/locations')
