@@ -65,9 +65,25 @@
 
         <div class="field">
             <div class="heading">
+                <label for="showMap">{{'Show Map' |t}}</label>
+                <div class="instructions">
+                    <p>{{'Should a map be displayed with the results?'|t}}</p>
+                </div>
+            </div>
+            {{ forms.lightSwitch({
+                label:        "Show Map"|t,
+                required:     false,
+                id:           'showMap',
+                name: 'showMap',
+                on: (settings.showMap is defined) ? settings.showMap : ""
+            }) }}
+        </div>
+
+        <div class="field">
+            <div class="heading">
                 <label for="useGeoLocation">{{'Use Geolocation' |t}}</label>
                 <div class="instructions">
-                    <p>{{'Use the users current location on page load. **Your site MUST use the https protocol or this will NOT work.'|t}}</p>
+                    <p>{{'Use the users current location on page load. <strong>**Your site MUST use the https protocol or this will NOT work.</strong>'|t}}</p>
                 </div>
             </div>
             {{ forms.lightSwitch({

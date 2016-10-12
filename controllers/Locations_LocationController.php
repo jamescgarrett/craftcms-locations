@@ -93,9 +93,9 @@ class Locations_LocationController extends BaseController
         $model->rentalBikesAndTours = craft()->request->getPost('rentalBikesAndTours');
         $model->products = craft()->request->getPost('products');
 
-        $mapData = craft()->locations_location->getMapDataFromLocation($model);
-        $model->longitude = mapData.longitude;
-        $model->latitude = mapData.latitude;
+        $mapCoords = craft()->locations_location->getMapDataFromLocation($model);
+        $model->longitude = $mapCoords['longitude'];
+        $model->latitude = $mapCoords['latitude'];
 
         if (craft()->locations_location->editLocation($model)) 
         {
