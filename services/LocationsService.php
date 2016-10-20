@@ -17,6 +17,11 @@ namespace Craft;
 class LocationsService extends BaseApplicationComponent
 {
     
+    /**
+     * Gets any front end scripts needed
+     *
+     * @return
+     */
     public function getScripts()
     {
         if ( $this->isSecureSite() )
@@ -34,25 +39,40 @@ class LocationsService extends BaseApplicationComponent
 
         craft()->templates->includeJsFile(UrlHelper::getResourceUrl('locations/src/js/locations.js'));
 
-        if (!$settings['useYourOwnJavascriptFile'])
+        if (!$settings['useYourOwnInitScript'])
         {
             $this->addLocationsJavascript($settings);
         }
 
     }
 
+    /**
+     * @param Plugin Settings
+     *
+     * @return
+     */
     public function addLocationsJavascript($settings)
     {
-        craft()->templates->includeJs('document.addEventListener("DOMContentLoaded",function(){const locations = new LocationLocator({
+        craft()->templates->includeJs('document.addEventListener("DOMContentLoaded",function(){let locations = new Locations({
             data: "' . $settings['dataApiPath'] . '"
         });});');
     }
 
+    /**
+     * Checks if https is needed
+     *
+     * @return Bool
+     */
     public function isSecureSite()
     {
       return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
     }
 
+    /**
+     * displays locations on the front end
+     *
+     * @return Template
+     */
     public function displayLocations()
     {
         $this->getScripts();

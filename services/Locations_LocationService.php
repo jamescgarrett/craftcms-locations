@@ -18,11 +18,9 @@ class Locations_LocationService extends BaseApplicationComponent
 {
 
     /**
-     * Get longitude and latitude from an address
+     * @param Locations_LocationModel|Locations_LocationModel[] $locations
      *
-     * From any other plugin file, call it like this:
-     *
-     *     craft()->locations_location->getMapDataFromLocation()
+     * @return array
      */
     public function getMapDataFromLocation(Locations_LocationModel $model) {
         $formattedAddress = urlencode($model->address1 . ' ,' . $model->city . ' ,' . $model->state . $model->zipCode . ' ,' . $model->country);
@@ -56,11 +54,9 @@ class Locations_LocationService extends BaseApplicationComponent
     }
     
     /**
-     * Get All Locations
-     * @param @json::Bool
-     * From any other plugin file, call it like this:
+     * @param Bool $json
      *
-     *     craft()->locations_location->getAllLocations()
+     * @return array
      */
     public function getAllLocations($json)
     {
@@ -80,12 +76,10 @@ class Locations_LocationService extends BaseApplicationComponent
         
     }
 
-     /**
-     * Prep content for json
-     * @param array
-     * From any other plugin file, call it like this:
+    /**
+     * @param array $locations
      *
-     *     craft()->locations_location->prepForJson()
+     * @return array
      */
     public function prepForJson($locations)
     {
@@ -99,6 +93,7 @@ class Locations_LocationService extends BaseApplicationComponent
                 'address2' => $location['address2'],
                 'city' => $location['city'],
                 'state' => $location['state'],
+                'zipCode' => $location['zipCode'],
                 'country' => $location['country'],
                 'longitude' => $location['longitude'],
                 'latitude' => $location['latitude'],
@@ -110,11 +105,9 @@ class Locations_LocationService extends BaseApplicationComponent
     }
 
     /**
-     * Get location by id
-     * @param Number
-     * From any other plugin file, call it like this:
+     * @param Number $locationId
      *
-     *     craft()->locations_location->getLocationById()
+     * @return object Locations_Location model
      */
     public function getLocationById($locationId)
     {
@@ -122,11 +115,11 @@ class Locations_LocationService extends BaseApplicationComponent
     }
 
     /**
-     * Save Location
-     * @param Locations_Location model
-     * From any other plugin file, call it like this:
+     * @param Locations_LocationModel|Locations_LocationModel[] $model
      *
-     *     craft()->locations_location->saveLocation()
+     * @return Bool
+     * @throws \CDbException
+     * @throws \Exception
      */
     public function saveLocation(&$model)
     {
@@ -192,11 +185,9 @@ class Locations_LocationService extends BaseApplicationComponent
     }
 
     /**
-     * Delete all Locations
+     * Delete All Locations
      * 
-     * From any other plugin file, call it like this:
-     *
-     *     craft()->locations_location->deleteAllLocations()
+     * @return
      */
     public function deleteAllLocations()
     {

@@ -2,7 +2,7 @@
 /**
  * Locations plugin for Craft CMS
  *
- * Locations Settings.twig
+ * Locations_Settings.twig
  *
  * @author    James C Garrett
  * @copyright Copyright (c) 2016 James C Garrett
@@ -13,9 +13,6 @@
 #}
 
 {% import "_includes/forms" as forms %}
-
-{# {% includeCssResource "locations/css/Locations_Style.css" %}
-{% includeJsResource "locations/js/Locations_Script.js" %} #}
 
 {{ forms.textField({
     label: 'Google Maps Api Key',
@@ -82,11 +79,11 @@
 {{ forms.lightswitchField({
     label: "Use Your Own Init Script?"|t,
     instructions: 'Would you like to use your own script to initilize the application?',
-    id: 'useYourOwnJavascriptFile',
-    name: 'useYourOwnJavascriptFile',
-    value: settings['useYourOwnJavascriptFile'] is defined ?  settings['useYourOwnJavascriptFile'] : false,
-    on: (settings['useYourOwnJavascriptFile'] is defined) ? settings['useYourOwnJavascriptFile'],
-    errors: settings.getErrors('useYourOwnJavascriptFile')})
+    id: 'useYourOwnInitScript',
+    name: 'useYourOwnInitScript',
+    value: settings['useYourOwnInitScript'] is defined ?  settings['useYourOwnInitScript'] : false,
+    on: (settings['useYourOwnInitScript'] is defined) ? settings['useYourOwnInitScript'],
+    errors: settings.getErrors('useYourOwnInitScript')})
 }}
 
 {{ forms.textField({
