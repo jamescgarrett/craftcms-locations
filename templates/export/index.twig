@@ -1,0 +1,20 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "Locations - Export"|t %}
+
+{% set tabs = {
+    locations: { label: "Locations"|t, url: url('locations') },
+    import: { label: "Import"|t, url: url('locations/import') },
+    export: { label: "Export"|t, url: url('locations/export') },
+    settings: { label: "Settings"|t, url: craft.plugins.getPlugin('locations').getSettingsUrl }
+} %}
+
+{% set selectedTab = 'export' %}
+
+{% block content %}
+    <div id="exportCsv" class="buttons">
+        <p>{{'Export Locations to CSV' |t}}</p>
+        <a class="btn submit" href="{{url('locations/export/csv')}}">{{'Export Locations' |t}}</a>
+    </div>
+{% endblock %}

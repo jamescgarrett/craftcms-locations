@@ -1,0 +1,17 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "Locations - Import"|t %}
+{% set tabs = {
+    locations: { label: "Locations"|t, url: url("locations") },
+    import: { label: "Import"|t, url: url("locations/import") },
+    export: { label: "Export"|t, url: url("locations/export") },
+    settings: { label: "Settings"|t, url: craft.plugins.getPlugin('locations').getSettingsUrl }
+} %}
+{% set selectedTab = 'import' %}
+
+{% block content %}
+
+    <p>You import has started and will be completed within the next few seconds.</p>
+
+{% endblock %}

@@ -1,14 +1,22 @@
 <?php
+/**
+ * Locations plugin for Craft CMS
+ *
+ * LocationsService
+ *
+ *
+ * @author    James C Garrett
+ * @copyright Copyright (c) 2016 James C Garrett
+ * @link      http://jamescgarrett.com
+ * @package   Locations
+ * @since     1.0.0
+ */
+
 namespace Craft;
 
 class LocationsService extends BaseApplicationComponent
 {
-
-	public function log($dataToLog)
-	{
-		LocationsPlugin::log(print_r($dataToLog, true));
-	}
-
+    
     public function getScripts()
     {
         if ( $this->isSecureSite() )
@@ -20,7 +28,7 @@ class LocationsService extends BaseApplicationComponent
             $protocol = 'http://';
         }
 
-        $settings =  craft()->locations_settings->getSettings();
+        $settings =  craft()->plugins->getPlugin('locations')->getSettings();
 
         craft()->templates->includeJsFile($protocol . 'maps.googleapis.com/maps/api/js?' . ($settings['googleMapsApiKey'] ? 'key='.$settings['googleMapsApiKey'] : ''));
 
@@ -71,7 +79,5 @@ class LocationsService extends BaseApplicationComponent
 
     
         return TemplateHelper::getRaw($html);
-
     }
-
 }

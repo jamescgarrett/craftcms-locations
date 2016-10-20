@@ -1,28 +1,68 @@
 <?php
+/**
+ * Locations plugin for Craft CMS
+ *
+ * Locations_Location Model
+ *
+ *
+ * @author    James C Garrett
+ * @copyright Copyright (c) 2016 James C Garrett
+ * @link      http://jamescgarrett.com
+ * @package   Locations
+ * @since     1.0.0
+ */
+
 namespace Craft;
 
-class Locations_LocationModel extends BaseModel
+class Locations_LocationModel extends BaseElementModel
 {
 
+    protected $elementType = 'Locations_Location';
+
+    /**
+     * Defines this model's attributes.
+     *
+     * @return array
+     */
     protected function defineAttributes()
     {
-        return array(
-            'id' 			  => AttributeType::Number,
-            'priority'        => AttributeType::String,
-            'name'            => AttributeType::String,
-            'address1'        => AttributeType::String,
-            'address2'        => AttributeType::String,
-            'city'            => AttributeType::String,
-            'state'           => AttributeType::String,
-            'zipCode'         => AttributeType::String,
-            'country'         => AttributeType::String,
-            'phone'           => AttributeType::String,
-            'website'         => AttributeType::String,
-            'demoDealer'      => AttributeType::String,
-            'rentalBikesAndTours' => AttributeType::String,
-            'products'          => AttributeType::String,
-            'longitude'       => AttributeType::String,
-            'latitude'       => AttributeType::String
-        );
+        return array_merge(parent::defineAttributes(), array(
+            'elementId'                 => array(AttributeType::Number, 'default' => 0),
+            'priority'                  => array(AttributeType::Number, 'default' => 0),
+            'name'                      => array(AttributeType::String, 'default' => '', 'required' => true),
+            'address1'                  => array(AttributeType::String, 'default' => '', 'required' => true),
+            'address2'                  => array(AttributeType::String, 'default' => ''),
+            'city'                      => array(AttributeType::String, 'default' => '', 'required' => true),
+            'state'                     => array(AttributeType::String, 'default' => '', 'required' => true),
+            'zipCode'                   => array(AttributeType::String, 'default' => '', 'required' => true),
+            'country'                   => array(AttributeType::String, 'default' => '', 'required' => true),
+            'longitude'                 => array(AttributeType::String, 'default' => ''),
+            'latitude'                  => array(AttributeType::String, 'default' => ''),
+            'phone'                     => array(AttributeType::String, 'default' => ''),
+            'website'                   => array(AttributeType::String, 'default' => '')
+        ));
+    }
+
+    /**
+     * Returns whether the current user can edit the element.
+     *
+     * @return bool
+     */
+    public function isEditable()
+    {
+        return true;
+    }
+
+    /**
+     * Returns the element's CP edit URL.
+     *
+     * @return string|false
+     */
+    public function getCpEditUrl()
+    {
+        if ($this->id)
+        {
+            return UrlHelper::getCpUrl('locations/location/' . $this->id);
+        }
     }
 }

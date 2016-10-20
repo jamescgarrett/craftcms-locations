@@ -1,219 +1,32 @@
 <?php
+/**
+ * Locations plugin for Craft CMS
+ *
+ * Locations_Location Service
+ *
+ *
+ * @author    James C Garrett
+ * @copyright Copyright (c) 2016 James C Garrett
+ * @link      http://jamescgarrett.com
+ * @package   Locations
+ * @since     1.0.0
+ */
+
 namespace Craft;
 
 class Locations_LocationService extends BaseApplicationComponent
 {
 
-	public function getLocationById($locationId)
-	{
-
-        $record = Locations_LocationRecord::model()->findById($locationId);
-
-        if ($record) 
-        {
-            return Locations_LocationModel::populateModel($record);
-        } 
-
-	}
-
-	public function getAllLocations($indexBy = null)
-	{
-		$records = Locations_LocationRecord::model()->ordered()->findAll();
-		return Locations_LocationModel::populateModels($records, $indexBy);
-	}
-
-    public function getAllLocationsForExport()
-    {
-        $records = Locations_LocationRecord::model()->ordered()->findAll();
-
-        if (!$records)
-        {
-            return false;
-        } else {
-            foreach ($records as $record) {
-                $results[] = $record->attributes;
-            }
-            
-            return $results;
-        }
-    }
-
-	public function addLocation(Locations_LocationModel $model)
-    {
-
-        if (!$model)
-        {
-            return false;
-        }
-
-        $record = new Locations_LocationRecord();
-
-        $record->setAttributes($model->getAttributes(), false);
-
-        $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
-        try
-        {
-            $record->validate();
-            $model->addErrors($record->getErrors());
-
-            if (!$model->hasErrors())
-            {
-                $record->save(false);
-
-                if ($transaction !== null)
-                {
-                    $transaction->commit();
-                }
-
-                $model->setAttribute('id', $record->getAttribute('id'));
-
-                return true;
-            }
-            else
-            {
-                if ($transaction !== null)
-                {
-                    $transaction->rollback();
-                }
-
-                return false;
-            }
-        }
-        catch (\Exception $ex)
-        {
-            if ($transaction !== null)
-            {
-                $transaction->rollback();
-            }
-
-            throw $ex;
-        }
-
-    }
-
-    public function editLocation(Locations_LocationModel $model)
-    {
-
-        if (!$model)
-        {
-            return false;
-        }
-
-        $record = Locations_LocationRecord::model()->findById($model->id);
-        if (!$record)
-        {
-            $record = new Locations_LocationRecord();
-        }
-
-        $record->setAttributes($model->getAttributes(), false);
-
-        $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
-        try
-        {
-            
-            $record->validate();
-            $model->addErrors($record->getErrors());
-
-            if (!$model->hasErrors())
-            {
-                $record->save(false);
-
-                if ($transaction !== null)
-                {
-                    $transaction->commit();
-                }
-
-                $model->setAttribute('id', $record->getAttribute('id'));
-
-                return true;
-            }
-            else
-            {
-                if ($transaction !== null)
-                {
-                    $transaction->rollback();
-                }
-
-                return false;
-            }
-        }
-        catch (\Exception $ex)
-        {
-            if ($transaction !== null)
-            {
-                $transaction->rollback();
-            }
-
-            throw $ex;
-        }
-    }
-
-    public function deleteLocationById($locationId)
-    {
-        $location = $this->getLocationById($locationId);
-
-        return $this->deleteLocation($location);
-    }
-
-
-    public function deleteLocation(Locations_LocationModel $model)
-    {
-        if (!$model || !$model->id)
-        {
-            return false;
-        }
-
-        $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
-        try
-        {
-            $rows = craft()->db->createCommand()->delete('locations_location', array(
-                'id' => $model->id
-            ));
-
-            if ($transaction !== null)
-            {
-                $transaction->commit();
-            }
-
-            return (bool) $rows;
-        }
-        catch (\Exception $ex)
-        {
-            if ($transaction !== null)
-            {
-                $transaction->rollback();
-            }
-        }
-    }
-
-    public function deleteAllLocations()
-    {
-        
-        $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
-        try
-        {
-            $rows = craft()->db->createCommand()->delete('locations_location');
-
-            if ($transaction !== null)
-            {
-                $transaction->commit();
-            }
-
-            return (bool) $rows;
-        }
-        catch (\Exception $ex)
-        {
-            if ($transaction !== null)
-            {
-                $transaction->rollback();
-            }
-        }
-    }
-
-    public function getMapDataFromLocation(Locations_LocationModel $model)
-    {
-        $zip = urlencode($model->zipCode);
-        $url = 'http://maps.google.com/maps/api/geocode/json?address=' . $zip . '&sensor=false';
+    /**
+     * Get longitude and latitude from an address
+     *
+     * From any other plugin file, call it like this:
+     *
+     *     craft()->locations_location->getMapDataFromLocation()
+     */
+    public function getMapDataFromLocation(Locations_LocationModel $model) {
+        $formattedAddress = urlencode($model->address1 . ' ,' . $model->city . ' ,' . $model->state . $model->zipCode . ' ,' . $model->country);
+        $url = 'http://maps.google.com/maps/api/geocode/json?address=' . $formattedAddress . '&sensor=false';
         $ch = curl_init();
         $options = array(
             CURLOPT_SSL_VERIFYPEER => false,
@@ -221,27 +34,287 @@ class Locations_LocationService extends BaseApplicationComponent
             CURLOPT_URL            => $url,
             CURLOPT_HEADER         => false,
         );
-        
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
         curl_close($ch);
-        if (!$response) {
+        if (!$response) 
+        {
             return false;
         }
         $response = json_decode($response);
-        if ($response->status !== 'OK') {
+        if ($response->status !== 'OK') 
+        {
             return false;
         }
-
         $longitude = $response->results[0]->geometry->location->lng;
         $latitude  = $response->results[0]->geometry->location->lat;
-
         $coords = array(
             'longitude' => $longitude,
             'latitude' => $latitude
         );
-
         return $coords;
     }
+    
+    /**
+     * Get All Locations
+     * @param @json::Bool
+     * From any other plugin file, call it like this:
+     *
+     *     craft()->locations_location->getAllLocations()
+     */
+    public function getAllLocations($json)
+    {
+        $criteria = craft()->elements->getCriteria('Locations_Location');
+        $query = craft()->elements->buildElementsQuery($criteria);
+        $query->order('title asc');
+        $queryResults = $query->queryAll();
+        $locations = Locations_LocationModel::populateModels($queryResults);
 
+        if ($json)
+        {
+            return $this->prepForJson($locations);
+        }
+        else{
+            return $locations;
+        }
+        
+    }
+
+     /**
+     * Prep content for json
+     * @param array
+     * From any other plugin file, call it like this:
+     *
+     *     craft()->locations_location->prepForJson()
+     */
+    public function prepForJson($locations)
+    {
+        $results = [];
+        foreach ($locations as $location)
+        {
+            $results[] = array(
+                'priority' => $location['priority'],
+                'name' => $location['name'],
+                'address1' => $location['address1'],
+                'address2' => $location['address2'],
+                'city' => $location['city'],
+                'state' => $location['state'],
+                'country' => $location['country'],
+                'longitude' => $location['longitude'],
+                'latitude' => $location['latitude'],
+                'phone' => $location['phone'],
+                'website' => $location['website']
+            );
+        }
+        return $results;
+    }
+
+    /**
+     * Get location by id
+     * @param Number
+     * From any other plugin file, call it like this:
+     *
+     *     craft()->locations_location->getLocationById()
+     */
+    public function getLocationById($locationId)
+    {
+        return craft()->elements->getElementById($locationId, 'Locations_Location');
+    }
+
+    /**
+     * Save Location
+     * @param Locations_Location model
+     * From any other plugin file, call it like this:
+     *
+     *     craft()->locations_location->saveLocation()
+     */
+    public function saveLocation(&$model)
+    {
+        $isNew = !$model->id;
+        if (!$isNew)
+        {
+            $record = Locations_LocationRecord::model()->findById($model->id);
+            if (!$record)
+            {
+                throw new Exception(Craft::t('No location exists with the ID “{id}”', array('id' => $model->id)));
+            }
+        }
+        else
+        {
+            $record = new Locations_LocationRecord();
+        }
+
+        $record->setAttributes($model->getAttributes(), false);
+
+        if (!$record->validate())
+        {
+            $model->addErrors($record->getErrors());
+
+            if (!craft()->content->validateContent($model))
+            {
+                $model->addErrors($model->getContent()->getErrors());
+            }
+            
+            return false;
+        }
+
+        if (!$model->hasErrors())
+        {
+            $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+            try
+            {
+                if (craft()->elements->saveElement($model))
+                {
+                    if ($isNew)
+                    {
+                        $record->id = $model->id;
+                    }
+                    $record->save(false);
+
+                    if ($transaction !== null)
+                    {
+                        $transaction->commit();
+                    }
+
+                    return true;
+                }
+            }
+            catch (\Exception $e)
+            {
+                if ($transaction !== null)
+                {
+                    $transaction->rollback();
+                }
+
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * Delete all Locations
+     * 
+     * From any other plugin file, call it like this:
+     *
+     *     craft()->locations_location->deleteAllLocations()
+     */
+    public function deleteAllLocations()
+    {
+        $locations = $this->getAllLocations(false);
+        foreach ($locations as $location)
+        {
+            $this->deleteLocation($location);
+        }
+    }
+
+    /**
+     * @param Locations_LocationModel|Locations_LocationModel[] $locations
+     *
+     * @return bool
+     * @throws \CDbException
+     * @throws \Exception
+     */
+    public function deleteLocation($locations)
+    {
+        if (!$locations)
+        {
+            return false;
+        }
+        $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+        try
+        {
+            if (!is_array($locations))
+            {
+                $locations = [$locations];
+            }
+            $locationsIds = [];
+            foreach ($locations as $location)
+            {
+                $event = new Event($this, [
+                    'location' => $location
+                ]);
+
+                $this->onBeforeDeleteLocation($event);
+
+                if ($event->performAction)
+                {
+                    $locationIds[] = $location->id;
+                }
+            }
+
+            if ($locationIds)
+            {
+                $success = craft()->elements->deleteElementById($locationIds);
+            }
+            else
+            {
+                $success = false;
+            }
+
+            if ($transaction !== null)
+            {
+                $transaction->commit();
+            }
+        }
+        catch (\Exception $e)
+        {
+            if ($transaction !== null)
+            {
+                $transaction->rollback();
+            }
+            throw $e;
+        }
+
+        if ($success)
+        {
+            foreach ($locations as $location)
+            {
+                $this->onDeleteLocation(new Event($this, [
+                    'location' => $location
+                ]));
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * This event is raised before a location is deleted
+     *
+     * @param \CEvent $event
+     *
+     * @throws \CException
+     */
+    public function onBeforeDeleteLocation(\CEvent $event)
+    {
+        $params = $event->params;
+        if (empty($params['location']) || !($params['location'] instanceof Locations_LocationModel))
+        {
+            throw new Exception('onBeforeDeleteLocation event requires "location" param with Locations_LocationModel instance that is being deleted.');
+        }
+
+        $this->raiseEvent('onBeforeDeleteLocation', $event);
+    }
+
+    /**
+     * This event is raised after a location has been successfully deleted
+     *
+     * @param \CEvent $event
+     *
+     * @throws \CException
+     */
+    public function onDeleteLocation(\CEvent $event)
+    {
+        $params = $event->params;
+        if (empty($params['location']) || !($params['location'] instanceof Locations_LocationModel))
+        {
+            throw new Exception('onDeleteLocation event requires "location" param with Locations_LocationModel instance that is being deleted.');
+        }
+
+        $this->raiseEvent('onDeleteLocation', $event);
+    }
 }

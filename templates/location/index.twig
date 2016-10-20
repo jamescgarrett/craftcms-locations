@@ -1,0 +1,20 @@
+{% extends "_layouts/elementindex" %}
+
+{% set title = "Locations"|t %}
+
+{% set elementType = "Locations_Location" %}
+{% set tabs = {
+    locations: { label: "Locations"|t, url: url("locations") },
+    import: { label: "Import"|t, url: url("locations/import") },
+    export: { label: "Export"|t, url: url("locations/export") },
+    settings: { label: "Settings"|t, url: craft.plugins.getPlugin('locations').getSettingsUrl }
+} %}
+
+{% block sidebar %}
+    <div class="buttons">
+        <div class="btngroup submit">
+            <a class="btn submit add icon" href="{{ url('locations/location/add') }}">{{ "New Location"|t }}</a>
+        </div>
+    </div>
+    {{ parent() }}
+{% endblock %}

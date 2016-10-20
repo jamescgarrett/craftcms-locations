@@ -1,0 +1,14 @@
+{
+	"name": "jamescgarrett/craftcms-locations",
+	"description": "Add a locations finder to your Craft CMS pages.",
+	"type": "craft-plugin",
+	"authors": [
+		{
+			"name": "James C Garrett",
+			"homepage": "http://jamescgarrett.com"
+		}
+	],
+	"require": {
+		"composer/installers": "~1.0"
+	}
+}

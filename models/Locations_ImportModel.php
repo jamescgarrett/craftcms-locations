@@ -1,10 +1,25 @@
 <?php
+/**
+ * Locations plugin for Craft CMS
+ *
+ * Locations_Import Model
+ *
+ * @author https://github.com/boboldehampsink/import
+ * Modified some code from boboldehampsink's git repo Import plugin for Craft CMS
+ *
+ * @author    James C Garrett
+ * @copyright Copyright (c) 2016 James C Garrett
+ * @link      http://jamescgarrett.com
+ * @package   Locations
+ * @since     1.0.0
+ */
+
 namespace Craft;
 
 class Locations_ImportModel extends BaseModel
 {
-
-   /**
+    
+    /**
      * Filetypes.
      */
     const TypeCSV = 'text/csv';
@@ -18,18 +33,6 @@ class Locations_ImportModel extends BaseModel
     const TypeCSVOth = 'application/octet-stream';
 
     /**
-     * Backup.
-     */
-    const Backup = 'backup';
-
-    /**
-     * Behaviors.
-     */
-    const BehaviorAppend = 'append';
-    const BehaviorReplace = 'replace';
-    const BehaviorDelete = 'delete';
-
-    /**
      * Statuses.
      */
     const StatusStarted = 'started';
@@ -37,31 +40,14 @@ class Locations_ImportModel extends BaseModel
     const StatusReverted = 'reverted';
 
     /**
-     * Fieldtypes.
-     */
-    const FieldTypeEntries = 'Entries';
-    const FieldTypeCategories = 'Categories';
-    const FieldTypeAssets = 'Assets';
-    const FieldTypeUsers = 'Users';
-    const FieldTypeRichText = 'RichText';
-    const FieldTypeNumber = 'Number';
-    const FieldTypeDate = 'Date';
-    const FieldTypeCheckboxes = 'Checkboxes';
-    const FieldTypeDropdown = 'Dropdown';
-    const FieldTypeMultiSelect = 'MultiSelect';
-    const FieldTypeRadioButtons = 'RadioButtons';
-    const FieldTypeTags = 'Tags';
-    const FieldTypeLightSwitch = 'Lightswitch';
-
-    /**
      * Delimiters.
      */
     const DelimiterSemicolon = ';';
     const DelimiterComma = ',';
     const DelimiterPipe = '|';
-    
+
     /**
-     * Use model validation to validate filetype.
+     * Defines this model's attributes.
      *
      * @return array
      */
@@ -85,5 +71,4 @@ class Locations_ImportModel extends BaseModel
             ),
         );
     }
-   
 }

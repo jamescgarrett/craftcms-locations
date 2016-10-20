@@ -1,0 +1,100 @@
+{#
+/**
+ * Locations plugin for Craft CMS
+ *
+ * Locations Settings.twig
+ *
+ * @author    James C Garrett
+ * @copyright Copyright (c) 2016 James C Garrett
+ * @link      http://jamescgarrett.com
+ * @package   Locations
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{# {% includeCssResource "locations/css/Locations_Style.css" %}
+{% includeJsResource "locations/js/Locations_Script.js" %} #}
+
+{{ forms.textField({
+    label: 'Google Maps Api Key',
+    instructions: 'Enter your Google Maps Api Key here. Get one here: https://developers.google.com/maps/documentation/javascript/get-api-key',
+    id: 'googleMapsApiKey',
+    name: 'googleMapsApiKey', 
+    value: settings['googleMapsApiKey'] ? settings['googleMapsApiKey'] : "",
+    autofocus: true,
+    first: true,
+    required: true,
+    errors: settings.getErrors('googleMapsApiKey')})
+}}
+
+{{ forms.textField({
+    label: 'Location Not Found Text',
+    instructions: 'Enter the text you want displayed when no locations are found.',
+    id: 'notFoundText',
+    name: 'notFoundText', 
+    value: settings['notFoundText'] ? settings['notFoundText'] : "",
+    required: true,
+    errors: settings.getErrors('notFoundText')})
+}}
+
+{{ forms.textField({
+    label: 'Default Zip',
+    instructions: 'Enter the default zip code to use when initially loading the page.',
+    id: 'defaultZip',
+    name: 'defaultZip', 
+    value: settings['defaultZip'] ? settings['defaultZip'] : "",
+    required: true,
+    errors: settings.getErrors('defaultZip')})
+}}
+
+{{ forms.textField({
+    label: 'Default Radius',
+    instructions: 'Enter the default radius you want to use when initally loading the page.',
+    id: 'defaultRadius',
+    name: 'defaultRadius', 
+    value: settings['defaultRadius'] ? settings['defaultRadius'] : "",
+    required: true,
+    errors: settings.getErrors('defaultRadius')})
+}}
+
+{{ forms.lightswitchField({
+    label: "Show Map?"|t,
+    instructions: 'Should the map be displayed with the results?',
+    id: 'showMap',
+    name: 'showMap',
+    value: settings['showMap'] is defined ? settings['showMap'] : false,
+    on: (settings['showMap'] is defined) ? settings['showMap'],
+    errors: settings.getErrors('showMap')})
+}}
+
+{{ forms.lightswitchField({
+    label: "Use Geo Location?"|t,
+    instructions: 'Should the application attempt to use location services. *Must use an SSL certificate for this to work.',
+    id: 'useGeoLocation',
+    name: 'useGeoLocation',
+    value: settings['useGeoLocation'] is defined ? settings['useGeoLocation'] : false,
+    on: (settings['useGeoLocation'] is defined) ? settings['useGeoLocation'],
+    errors: settings.getErrors('useGeoLocation')})
+}}
+
+{{ forms.lightswitchField({
+    label: "Use Your Own Init Script?"|t,
+    instructions: 'Would you like to use your own script to initilize the application?',
+    id: 'useYourOwnJavascriptFile',
+    name: 'useYourOwnJavascriptFile',
+    value: settings['useYourOwnJavascriptFile'] is defined ?  settings['useYourOwnJavascriptFile'] : false,
+    on: (settings['useYourOwnJavascriptFile'] is defined) ? settings['useYourOwnJavascriptFile'],
+    errors: settings.getErrors('useYourOwnJavascriptFile')})
+}}
+
+{{ forms.textField({
+    label: 'Api Path',
+    instructions: 'The path to your API. *Chances are you will not need to change this.',
+    id: 'dataApiPath',
+    name: 'dataApiPath', 
+    value: settings['dataApiPath'] ?  settings['dataApiPath'] : "",
+    required: true,
+    errors: settings.getErrors('dataApiPath')})
+}}

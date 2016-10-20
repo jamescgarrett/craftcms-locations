@@ -1,15 +1,45 @@
 <?php
+/**
+ * Locations plugin for Craft CMS
+ *
+ * Locations_Api Controller
+ *
+ *
+ * @author    James C Garrett
+ * @copyright Copyright (c) 2016 James C Garrett
+ * @link      http://jamescgarrett.com
+ * @package   Locations
+ * @since     1.0.0
+ */
+
 namespace Craft;
 
 class Locations_ApiController extends BaseController
 {
 
+    /**
+     * @var    bool|array Allows anonymous access to this controller's actions.
+     * @access protected
+     */
     protected $allowAnonymous = true;
 
+    /**
+     * Handle request for the front end's api
+     */
     public function actionLocations()
     {
-        $variables['locations'] = craft()->locations_location->getAllLocationsForExport();
-        $variables['settings'] = craft()->locations_settings->getSettings();
+        $settings = craft()->plugins->getPlugin('locations')->getSettings();
+
+        $variables['locations'] = craft()->locations_location->getAllLocations(true);
+
+        $variables['settings'] = array(
+            'notFoundText' => $settings->notFoundText,
+            'defaultZip' => $settings->defaultZip,
+            'defaultRadius' => $settings->defaultRadius,
+            'showMap' => $settings->showMap,
+            'useGeoLocation' => $settings->useGeoLocation,
+            'useYourOwnJavascriptFile' => $settings->useYourOwnJavascriptFile
+        );
 
         // Get Templates Paths
         $sitePath = craft()->path->getTemplatesPath();
@@ -24,5 +54,4 @@ class Locations_ApiController extends BaseController
         craft()->path->setTemplatesPath($sitePath);
 
     }
-
 }

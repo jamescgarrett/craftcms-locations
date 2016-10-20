@@ -1,163 +1,175 @@
 {% extends "_layouts/cp" %}
-{% import '_includes/forms' as forms %}
+{% import "_includes/forms"as forms %}
+
+{% set title = "Locations - Add / Edit"|t %}
 
 {% set fullPageForm = true %}
 
-{% set title = "Locations - Edit Location"|t %}
+{% set tabs = {
+    locations: { label: 'Locations'|t, url: url('locations') },
+    import: { label: 'Import'|t, url: url('locations/import') },
+    export: { label: 'Export'|t, url: url('locations/export') },
+    settings: { label: "Settings"|t, url: craft.plugins.getPlugin('locations').getSettingsUrl }
+} %}
 
 {% set crumbs = [
-    { label: 'Locations'|t, url: url('locations') },
-    { label: location.name |t, url: url('locations/location/' ~ location.id) }
+    { label: "Locations"|t, url: url('locations') },
+    { label: location.name|t, url: url(craft.request.url) },
 ] %}
 
-{% set content %}
+{% block content %}
 
     {% if craft.app.version < 2.5 %}
-        <form id="site-form" method="post" accept-charset="UTF-8" data-saveshortcut="1" data-saveshortcut-redirect="{{ continueEditingUrl }}">
+        <form id="form-location" method="post" accept-charset="UTF-8" data-saveshortcut="1" data-saveshortcut-redirect="{{ continueEditingUrl }}">
     {% endif %}
 
         {{ getCsrfInput() }}
-        <input type="hidden" name="action" value="locations/location/editLocation" />
-        <input type="hidden" name="id" value="{{location.id}}">
+        <input type="hidden" name="action" value="locations/location/save">
         <input type="hidden" name="redirect" value="locations">
+        {% if location.id %}
+            <input type="hidden" name="locationId" value="{{ location.id }}">
+            <input type="hidden" name="elementId" value="{{ location.elementId }}">
+        {% endif %}
 
-        {{ forms.selectField({
-            first:        true,
-            label:        "Priority"|t,
-            required:     true,
-            id:           'priority',
+        {% if location and location.getAllErrors()|length %}
+            <ul>
+                {% for error in location.getAllErrors() %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {# {{ forms.selectField({
+            first: true,
+            label: "Priority"|t,
+            required: true,
+            id: 'priority',
             name: 'priority',
             instructions: "Choose a priority for the display order."|t,
-            autofocus:    true,
+            autofocus: true,
             options: {
                 0: 'Normal',
                 1: 'Featured',
                 2: 'Always Shown'
             },
-            value: location.priority
-        }) }}
+            value: location ? location.priority : 0,
+            errors: location ? location.getErrors('priority')
+        }) }} #}
 
         {{ forms.textField({
-            label:        "Name"|t,
-            required:     true,
-            id:           'name',
+            label: "Name"|t,
+            id: 'name',
+            class: 'nicetext',
             name: 'name',
-            instructions: ""|t,
-            value: location.name
+            value: location ? location.name : '',
+            errors: location.getErrors('name'),
+            required: true
         }) }}
 
         {{ forms.textField({
-            label:        "Address 1"|t,
-            required:     true,
-            id:           'address1',
+            label: "Address 1"|t,
+            id: 'address1',
+            class: 'nicetext',
             name: 'address1',
-            instructions: ""|t,
-            value: location.address1
+            value: location ? location.address1 : '',
+            errors: location.getErrors('address1'),
+            required: true
         }) }}
 
         {{ forms.textField({
-            label:        "Address 2"|t,
-            required:     false,
-            id:           'address2',
+            label: "Address 2"|t,
+            id: 'address2',
+            class: 'nicetext',
             name: 'address2',
-            instructions: ""|t,
-            value: location.address2
+            value: location ? location.address2 : '',
+            errors: location.getErrors('address2'),
+            required: false
         }) }}
 
         {{ forms.textField({
-            label:        "City"|t,
-            required:     true,
-            id:           'city',
+            label: "City"|t,
+            id: 'city',
+            class: 'nicetext',
             name: 'city',
-            instructions: ""|t,
-            value: location.city
+            value: location ? location.city : '',
+            errors: location.getErrors('city'),
+            required: true
         }) }}
 
         {{ forms.textField({
-            label:        "State"|t,
-            required:     true,
-            id:           'state',
+            label: "State"|t,
+            id: 'state',
+            class: 'nicetext',
             name: 'state',
-            instructions: ""|t,
-            value: location.state
+            value: location ? location.state : '',
+            errors: location.getErrors('state'),
+            required: true
         }) }}
 
         {{ forms.textField({
-            label:        "Zip Code"|t,
-            required:     true,
-            id:           'zipCode',
+            label: "Zip Code"|t,
+            id: 'zipCode',
+            class: 'nicetext',
             name: 'zipCode',
-            instructions: ""|t,
-            value: location.zipCode
+            value: location ? location.zipCode : '',
+            errors: location.getErrors('zipCode'),
+            required: true
         }) }}
 
         {{ forms.textField({
-            label:        "County"|t,
-            required:     true,
-            id:           'country',
+            label: "Country"|t,
+            id: 'country',
+            class: 'nicetext',
             name: 'country',
-            instructions: ""|t,
-            value: location.country
+            value: location ? location.country : '',
+            errors: location.getErrors('country'),
+            required: true
         }) }}
 
         {{ forms.textField({
-            label:        "Phone"|t,
-            required:     false,
-            id:           'phone',
+            label: "Longitude"|t,
+            id: 'longitude',
+            instructions: "This will be created automatically if left blank."|t,
+            class: 'nicetext',
+            name: 'longitude',
+            value: location ? location.longitude : '',
+            errors: location.getErrors('longitude'),
+            required: false
+        }) }}
+
+        {{ forms.textField({
+            label: "Latitude"|t,
+            id: 'latitude',
+            instructions: "This will be created automatically if left blank."|t,
+            class: 'nicetext',
+            name: 'latitude',
+            value: location ? location.latitude : '',
+            errors: location.getErrors('latitude'),
+            required: false
+        }) }}
+
+        {{ forms.textField({
+            label: "Phone"|t,
+            id: 'phone',
+            class: 'nicetext',
             name: 'phone',
-            instructions: ""|t,
-            value: location.phone
+            value: location ? location.phone : '',
+            errors: location.getErrors('phone'),
+            required: false
         }) }}
 
         {{ forms.textField({
-            label:        "Website"|t,
-            required:     false,
-            id:           'website',
+            label: "Website"|t,
+            id: 'website',
+            class: 'nicetext',
             name: 'website',
-            instructions: ""|t,
-            value: location.website
+            value: location ? location.website : '',
+            errors: location.getErrors('website'),
+            required: false
         }) }}
-
-        {{ forms.textField({
-            label:        "Demo Dealer"|t,
-            required:     false,
-            id:           'demoDealer',
-            name: 'demoDealer',
-            instructions: ""|t,
-            value: location.demoDealer
-        }) }}
-
-        {{ forms.textField({
-            label:        "Rental Bikes and Tours"|t,
-            required:     false,
-            id:           'rentalBikesAndTours',
-            name: 'rentalBikesAndTours',
-            instructions: ""|t,
-            value: location.rentalBikesAndTours
-        }) }}
-
-        {{ forms.textField({
-            label:        "Products"|t,
-            required:     false,
-            id:           'products',
-            name: 'products',
-            instructions: "Comma separated list."|t,
-            value: location.products
-        }) }}
-
-        <!-- Needed for for Craft < 2.5 -->
-        {% if craft.app.version < 2.5 %}
-            <div class="item" data-position="left" data-colspan="1">
-                <div class="buttons">
-                    <div class="btngroup submit first">
-                        <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
-                    </div>
-                </div>
-            </div>
-        {% endif %}
 
     {% if craft.app.version < 2.5 %}
         </form>
     {% endif %}
 
-{% endset %}
+{% endblock %}

@@ -2,7 +2,7 @@
 
 > still in development...
 
-A CraftCMS plugin which allows a user to search locations using Google Maps API. 
+A CraftCMS plugin which allows you to add a location finder to your pages.
 
 ## Instructions coming soon...
 

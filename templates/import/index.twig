@@ -1,22 +1,21 @@
 {% extends "_layouts/cp" %}
-{% import '_includes/forms' as forms %}
+{% import "_includes/forms" as forms %}
 
 {% set title = "Locations - Import"|t %}
-
 {% set tabs = {
-    locations:  { label: "Locations"|t, url: url('locations') },
-    settings:   { label: "Settings"|t, url: url('locations/settings') },
-    import:       { label: "Import"|t, url: url('locations/import') },
-    export:       { label: "Export"|t, url: url('locations/export') }
+    locations: { label: "Locations"|t, url: url("locations") },
+    import: { label: "Import"|t, url: url("locations/import") },
+    export: { label: "Export"|t, url: url("locations/export") },
+    settings: { label: "Settings"|t, url: craft.plugins.getPlugin('locations').getSettingsUrl }
 } %}
 {% set selectedTab = 'import' %}
 
-{% set content %}
+{% block content %}
 
     {% if options is not defined %}
-        <p>{{nooptions.message |t}}</p>
+        <p>{{ nooptions.message |t }}</p>
     {% else %}
-    	<form id="import-form" method="post" class="centered" accept-charset="UTF-8" enctype="multipart/form-data">
+        <form id="form-import" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
             {{ getCsrfInput() }}
             <input type="hidden" name="action" value="locations/import/uploadFile">
 
@@ -24,39 +23,37 @@
                 first:        true,
                 label:        "Replace or Add" |t,
                 required:     true,
-                id:           'importType',
-                name: 'importType',
+                id:           'behavior',
+                name: "import[behavior]",
                 instructions: "Choose whether to delete all or add to existing locations." |t,
                 options: {
-                	1: 'Delete All and Replace',
-                	2: 'Add to Existing'
+                    1: 'Delete All and Replace',
+                    2: 'Add to Existing'
                 }
             }) }}
 
             {{ forms.selectField({
                 label:        "Asset Source" |t,
                 required:     true,
-                id:           'importAssetSource',
-                name: 'importAssetSource',
+                id:           'assetSource',
+                name: "import[assetSource]",
                 instructions: "Choose the asset source you want to upload the import file to." |t,
                 options: options
             }) }}
 
             {{ forms.fileField({
-                label:        "Locations CSV" |t,
-                required:     true,
-                id:           'importFile',
-                name: 'importFile',
+                label: "CSV File" |t,
+                required: true,
+                id: 'file',
+                name: "file",
                 instructions: "Choose a CSV File to Import your locations." |t
             }) }}
 
             <div id="importCsv" class="buttons">
-    			<input class="btn submit" type="submit" value="Upload File">
-    		</div>
+                <input class="btn submit" type="submit" value="Upload File">
+            </div>
 
         </form>
     {% endif %}
-			
 
-
-{% endset %}
+{% endblock %}
